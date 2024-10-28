@@ -63,8 +63,10 @@ class Server:
             List[List]: A list of lists containing the records for the specified page,
                         or an empty list if the indices are out of range.
         """
-        assert type(page) is int and page > 0, "Page number must be a positive integer."
-        assert type(page_size) is int and page_size > 0, "Page size must be a positive integer."
+        assert isinstance(
+            page, int) and page > 0, "Page number must be a positive integer."
+        assert isinstance(
+            page_size, int) and page_size > 0, "Page size must be a positive integer."
 
         dataset = self.dataset()
         start, end = index_range(page, page_size)

@@ -35,14 +35,15 @@ class Server:
 
     def indexed_dataset(self) -> Dict[int, List]:
         """
-        Caches the first 1000 rows of the dataset as a dictionary with integer indices 
+        Caches the first 1000 rows of the dataset as a dictionary with integer indices
         as keys to create an indexed, deletion-resilient dataset.
 
         Returns:
-            Dict[int, List]: A dictionary where each key is an index and each value 
+            Dict[int, List]: A dictionary where each key is an index and each value
                              is a dataset row, up to 1000 rows.
         """
-        # Load and cache an indexed version of the dataset if it hasn't been created.
+        # Load and cache an indexed version of the dataset if it hasn't been
+        # created.
         if self.__indexed_dataset is None:
             dataset = self.dataset()
             truncated_dataset = dataset[:1000]  # Limit to the first 1000 rows
@@ -53,7 +54,7 @@ class Server:
 
     def get_hyper_index(self, index: int = None, page_size: int = 10) -> Dict:
         """
-        Provides a deletion-resilient paginated response starting from a specific index 
+        Provides a deletion-resilient paginated response starting from a specific index
         with a specified page size.
 
         Args:
@@ -61,19 +62,21 @@ class Server:
             page_size (int): The number of items per page.
 
         Returns:
-            Dict: A dictionary with pagination details including data, 
+            Dict: A dictionary with pagination details including data,
                   starting index, page size, and the next index.
         """
-        # Retrieve the indexed dataset and validate that the index is within bounds.
+        # Retrieve the indexed dataset and validate that the index is within
+        # bounds.
         dataset = self.indexed_dataset()
         data_length = len(dataset)
         assert 0 <= index < data_length, "Index out of range."
-        
-        # Initialize the response dictionary and prepare to collect the paginated data.
+
+        # Initialize the response dictionary and prepare to collect the
+        # paginated data.
         response = {}
         data = []
         response['index'] = index  # Record the starting index
-        
+
         # Collect `page_size` elements, accounting for any deleted indices.
         for i in range(page_size):
             while True:
@@ -84,10 +87,11 @@ class Server:
                     break
             data.append(curr)
 
-        # Populate the response dictionary with the collected data and metadata.
+        # Populate the response dictionary with the collected data and
+        # metadata.
         response['data'] = data
         response['page_size'] = len(data)
-        
+
         # Determine the next index, if it exists; otherwise set to None.
         if dataset.get(index):
             response['next_index'] = index

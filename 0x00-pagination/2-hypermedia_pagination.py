@@ -12,7 +12,8 @@ class Server:
     DATA_FILE = "Popular_Baby_Names.csv"
 
     def __init__(self):
-        # Initializes the Server instance and sets dataset to None for lazy loading.
+        # Initializes the Server instance and sets dataset to None for lazy
+        # loading.
         self.__dataset = None
 
     def dataset(self) -> List[List]:
@@ -38,12 +39,13 @@ class Server:
 
         Args:
             value (int): The value to check.
-        
+
         Raises:
             AssertionError: If the value is not a positive integer.
         """
         # Ensure the input value is a positive integer.
-        assert type(value) is int and value > 0, "Value must be a positive integer."
+        assert isinstance(
+            value, int) and value > 0, "Value must be a positive integer."
 
     def get_page(self, page: int = 1, page_size: int = 10) -> List[List]:
         """
@@ -64,7 +66,8 @@ class Server:
         dataset = self.dataset()
         start, end = index_range(page, page_size)
 
-        # Retrieve data slice; handle IndexError by returning an empty list if out of range.
+        # Retrieve data slice; handle IndexError by returning an empty list if
+        # out of range.
         try:
             data = dataset[start:end]
         except IndexError:
@@ -89,7 +92,8 @@ class Server:
         # Get the data for the requested page.
         data = self.get_page(page, page_size)
 
-        # Build metadata including page size, total pages, data, previous and next pages.
+        # Build metadata including page size, total pages, data, previous and
+        # next pages.
         info = {
             "page": page,
             "page_size": page_size if page_size <= len(data) else len(data),
